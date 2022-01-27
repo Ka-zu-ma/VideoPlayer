@@ -29,20 +29,68 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('assets/plane.mp4');
+    _controller.initialize().then((_) {
+      // 最初のフレームを描画するため初期化後に更新
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            // 動画を表示
+            child: VideoPlayer(_controller),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                onPressed: () {
+                  // 動画を最初から再生
+                  _controller
+                      .seekTo(Duration.zero)
+                      .then((_) => _controller.play());
+                },
+                icon: Icon(Icons.refresh),
+              ),
+              IconButton(
+                onPressed: () {
+                  // 動画を再生
+                  _controller.play();
+                },
+                icon: Icon(Icons.play_arrow),
+              ),
+              IconButton(
+                onPressed: () {
+                  // 動画を一時停止
+                  _controller.pause();
+                },
+                icon: Icon(Icons.pause),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
