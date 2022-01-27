@@ -62,6 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
             // 動画を表示
             child: VideoPlayer(_controller),
           ),
+          VideoProgressIndicator(
+            _controller,
+            allowScrubbing: true,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
