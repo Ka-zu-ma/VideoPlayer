@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final String duration = _controller.value.duration.toString();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Demo Home Page'),
+        title: Text('Video Player'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
