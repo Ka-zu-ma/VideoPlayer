@@ -23,13 +23,21 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
-
+  
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   late VideoPlayerController _controller;
+  late VoidCallback _listener;
+
+  _MyHomePageState() {
+    _listener = () {
+      // 検知したタイミングで再描画する
+      setState(() {});
+    };
+  }
 
   @override
   void initState() {
@@ -39,6 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // 最初のフレームを描画するため初期化後に更新
       setState(() {});
     });
+    _controller.addListener(_listener);
+  }
+
+  @override
+  void deactivate() {
+    _controller.removeListener(_listener);
+    super.deactivate();
   }
 
   @override
@@ -49,10 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
+    // 現在の値を元にUIを表示する
+    final String position = _controller.value.position.toString();
+    final String duration = _controller.value.duration.toString();
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Flutter Demo Home Page'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -66,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _controller,
             allowScrubbing: true,
           ),
+          Text('$position / $duration'),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
